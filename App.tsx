@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { ThemeProvider } from 'styled-components';
+import { NavigationContainer } from '@react-navigation/native';
 
 import {
   Poppins_400Regular,
@@ -11,8 +12,7 @@ import {
 } from '@expo-google-fonts/poppins';
 
 import theme from './src/global/styles/theme';
-import { Register } from './src/screens/Register';
-import { Dashboard } from './src/screens/Dashboard';
+import { AppRoutes } from './src/routes/app.routes';
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -55,7 +55,9 @@ export default function App() {
       }}
     >
       <ThemeProvider theme={theme}>
-        <Register />
+        <NavigationContainer>
+          <AppRoutes />
+        </NavigationContainer>
       </ThemeProvider>
     </View>
   );
