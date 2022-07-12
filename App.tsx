@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { ThemeProvider } from 'styled-components';
@@ -48,17 +48,15 @@ export default function App() {
   }
 
   return (
-    <View
+    <GestureHandlerRootView
       onLayout={onLayoutRootView}
-      style={{
-        flex: 1
-      }}
+      style={{ flex: 1 }}
     >
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <AppRoutes />
         </NavigationContainer>
       </ThemeProvider>
-    </View>
+    </GestureHandlerRootView>
   );
 }
