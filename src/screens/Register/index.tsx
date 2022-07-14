@@ -8,6 +8,9 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import uuid from 'react-native-uuid';
+import { useNavigation } from '@react-navigation/native';
 
 import { InputForm } from '../../components/Form/InputForm';
 import { Button } from '../../components/Form/Button';
@@ -42,15 +45,18 @@ const schema = yup.object().shape({
 export function Register() {
   const [transactionType, setTransactionType] = useState('');
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
-
   const [category, setCategory] = useState({
     key: 'category',
     name: 'Categoria'
   });
 
+  const collectionKey = '@gofinances:transactions';
+  const navigation = useNavigation();
+
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm({
     resolver: yupResolver(schema)
@@ -68,7 +74,7 @@ export function Register() {
     setCategoryModalOpen(false);
   }
 
-  function handleRegister(form: FormData) {
+  async function handleRegister(form: FormData) {
 
     if (!transactionType)
       return Alert.alert('Selecione o tipo da transação');
@@ -76,14 +82,33 @@ export function Register() {
     if (category.key === 'category')
       return Alert.alert('Selecione o tipo a categoria');
 
-    const data = {
+    const newTransaction = {
+      id: String(uuid.v4()),
       name: form.name,
       amount: form.amount,
       transactionType,
-      category: category.key
+      category: category.key,
+      date: new Date()
     }
 
-    console.log(data);
+    try {
+      const collection = await AsyncStorage.getItem(collectionKey);
+      const currentCollection = collection ? JSON.parse(collection) : [];
+      const collectionFormatted = [...currentCollection, newTransaction];
+
+      await AsyncStorage.setItem(collectionKey, JSON.stringify(collectionFormatted));
+
+      reset();
+      setTransactionType('');
+      setCategory({
+        key: 'category',
+        name: 'Categoria'
+      });
+      navigation.navigate('Listagem');
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Não foi possível salver");
+    }
   }
 
   return (
