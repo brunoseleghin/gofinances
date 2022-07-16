@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import { InputForm } from '../../components/Form/InputForm';
 import { Button } from '../../components/Form/Button';
@@ -51,7 +51,7 @@ export function Register() {
   });
 
   const collectionKey = '@gofinances:transactions';
-  const navigation = useNavigation();
+  const { navigate }: NavigationProp<ParamListBase> = useNavigation();
 
   const {
     control,
@@ -104,7 +104,7 @@ export function Register() {
         key: 'category',
         name: 'Categoria'
       });
-      navigation.navigate('Listagem');
+      navigate('Listagem');
     } catch (error) {
       console.log(error);
       Alert.alert("Não foi possível salver");
