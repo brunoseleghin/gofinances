@@ -49,8 +49,6 @@ export function Register() {
     key: 'category',
     name: 'Categoria'
   });
-
-  const collectionKey = '@gofinances:transactions';
   const { navigate }: NavigationProp<ParamListBase> = useNavigation();
 
   const {
@@ -92,6 +90,7 @@ export function Register() {
     }
 
     try {
+      const collectionKey = '@gofinances:transactions';
       const collection = await AsyncStorage.getItem(collectionKey);
       const currentCollection = collection ? JSON.parse(collection) : [];
       const collectionFormatted = [...currentCollection, newTransaction];
