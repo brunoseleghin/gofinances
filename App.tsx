@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
@@ -52,6 +53,7 @@ export default function App() {
       onLayout={onLayoutRootView}
       style={{ flex: 1 }}
     >
+      <StatusBar barStyle={'light-content'} />
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <AppRoutes />
