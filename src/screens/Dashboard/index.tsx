@@ -23,7 +23,8 @@ import {
 } from './styles';
 
 import { HighlightCard } from '../../components/HighlightCard';
-import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
+import { TransactionCard } from '../../components/TransactionCard';
+import { TransactionCardProps } from '../../interface/TransactionCardProps';
 
 export interface DataListProps extends TransactionCardProps {
   id: string;

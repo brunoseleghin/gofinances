@@ -1,4 +1,6 @@
 import React from 'react';
+
+import { TransactionCardProps } from '../../interface/TransactionCardProps';
 import { categories } from '../../utils/categories';
 
 import {
@@ -11,14 +13,6 @@ import {
   CategoryName,
   Date
 } from './styles';
-
-export interface TransactionCardProps {
-  type: 'positive' | 'negative';
-  name: string;
-  amount: string;
-  category: string;
-  date: string;
-}
 
 interface Props {
   data: TransactionCardProps;
