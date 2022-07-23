@@ -16,7 +16,12 @@ import {
 } from '@expo-google-fonts/poppins';
 
 import theme from './src/global/styles/theme';
+
 import { AppRoutes } from './src/routes/app.routes';
+
+import { SignIn } from './src/screens/SignIn';
+
+import { AuthProvider } from './src/hooks/auth';
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -59,7 +64,9 @@ export default function App() {
       <StatusBar barStyle={'light-content'} />
       <ThemeProvider theme={theme}>
         <NavigationContainer>
-          <AppRoutes />
+          <AuthProvider>
+            <SignIn />
+          </AuthProvider>
         </NavigationContainer>
       </ThemeProvider>
     </GestureHandlerRootView>
