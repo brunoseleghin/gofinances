@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TransactionCardProps } from '../../interface/TransactionCardProps';
+import { TransactionProps } from '../../interface/TransactionProps';
 import { categories } from '../../utils/categories';
 
 import {
@@ -15,7 +15,7 @@ import {
 } from './styles';
 
 interface Props {
-  data: TransactionCardProps;
+  data: TransactionProps;
 }
 
 export function TransactionCard({ data }: Props) {

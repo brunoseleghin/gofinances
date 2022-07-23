@@ -24,9 +24,9 @@ import {
 
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard } from '../../components/TransactionCard';
-import { TransactionCardProps } from '../../interface/TransactionCardProps';
+import { TransactionProps } from '../../interface/TransactionProps';
 
-export interface DataListProps extends TransactionCardProps {
+export interface DataListProps extends TransactionProps {
   id: string;
 }
 

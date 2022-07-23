@@ -1,4 +1,4 @@
-export interface TransactionCardProps {
+export interface TransactionProps {
   type: 'positive' | 'negative';
   name: string;
   amount: string;
