@@ -1,8 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {
+  useCallback,
+  useEffect,
+  useState
+} from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
+import { useAuth } from '../../hooks/auth';
+
+import { ActivityIndicator } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   Container,
@@ -47,6 +53,7 @@ export function Dashboard() {
   const [highlightTransaction, setHighlightTransaction] = useState<HighlightTransactions>({} as HighlightTransactions);
 
   const theme = useTheme();
+  const { signOut, user } = useAuth();
 
   function getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative') {
     const lastTransaction = new Date(
@@ -155,17 +162,18 @@ export function Dashboard() {
               <UserWrapper>
                 <UserInfo>
                   <Photo
-                    source={{ uri: 'https://avatars.githubusercontent.com/u/36992725?v=4' }}
+                    //source={{ uri: 'https://avatars.githubusercontent.com/u/36992725?v=4' }}
+                    source={{ uri: user.photo }}
                   />
 
                   <User>
                     <UserGreeting>Olá,</UserGreeting>
-                    <UserName>Bruno</UserName>
+                    <UserName>{user.name}</UserName>
                   </User>
                 </UserInfo>
 
                 <LogoutButton
-                  onPress={() => { }}
+                  onPress={signOut}
                 >
                   <Icon name="power" />
                 </LogoutButton>

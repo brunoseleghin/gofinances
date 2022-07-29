@@ -7,7 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { ThemeProvider } from 'styled-components';
-import { NavigationContainer } from '@react-navigation/native';
+import { Routes } from './src/routes';
 
 import {
   Poppins_400Regular,
@@ -17,14 +17,12 @@ import {
 
 import theme from './src/global/styles/theme';
 
-import { AppRoutes } from './src/routes/app.routes';
-
-import { SignIn } from './src/screens/SignIn';
-
-import { AuthProvider } from './src/hooks/auth';
+import { AuthProvider, useAuth } from './src/hooks/auth';
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+
+  const { userStorageLoading } = useAuth();
 
   useEffect(() => {
     async function prepare() {
@@ -39,7 +37,7 @@ export default function App() {
       } catch (e) {
         console.warn(e);
       } finally {
-        setAppIsReady(true);
+        setAppIsReady(true)
       }
     }
 
@@ -47,7 +45,7 @@ export default function App() {
   }, []);
 
   const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
+    if (appIsReady || userStorageLoading) {
       await SplashScreen.hideAsync();
     }
   }, [appIsReady]);
@@ -63,11 +61,9 @@ export default function App() {
     >
       <StatusBar barStyle={'light-content'} />
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <AuthProvider>
-            <SignIn />
-          </AuthProvider>
-        </NavigationContainer>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
   );
