@@ -2,7 +2,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, LogBox } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
@@ -18,6 +18,9 @@ import {
 import theme from './src/global/styles/theme';
 
 import { AuthProvider, useAuth } from './src/hooks/auth';
+
+
+LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
