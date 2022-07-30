@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react';
+import { useAuth } from '../../hooks/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { COLLECTION_TRANSACTIONS } from '../../config/database';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useFocusEffect } from '@react-navigation/native';
@@ -27,7 +29,6 @@ import {
 } from './styles';
 import { ActivityIndicator } from 'react-native';
 
-
 interface CategoryData {
   key: string;
   name: string;
@@ -43,6 +44,7 @@ export function Resume() {
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
 
   const theme = useTheme();
+  const { user } = useAuth();
 
   function handleDateChange(action: 'prev' | 'next') {
     if (action === 'next') {
@@ -54,8 +56,8 @@ export function Resume() {
 
   async function loadData() {
     setIsLoading(true);
-    const dataKey = '@gofinances:transactions';
-    const response = await AsyncStorage.getItem(dataKey);
+
+    const response = await AsyncStorage.getItem(`${COLLECTION_TRANSACTIONS}:${user.id}`);
     const responseFormatted = response ? JSON.parse(response) : [];
 
     const expensives = responseFormatted

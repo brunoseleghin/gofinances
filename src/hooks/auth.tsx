@@ -5,7 +5,6 @@ import React, {
   useState,
   useEffect
 } from 'react';
-import { useTheme } from 'styled-components';
 
 const CLIENT_ID = process.env.CLIENT_ID as string;
 const REDIRECT_URI = process.env.REDIRECT_URI as string;
@@ -13,6 +12,7 @@ const REDIRECT_URI = process.env.REDIRECT_URI as string;
 import * as AuthSession from 'expo-auth-session';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { COLLECTION_USER } from '../config/database'
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -46,8 +46,6 @@ function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>({} as User);
   const [userStorageLoading, setUserStorageLoading] = useState(true);
 
-  const userStorageKey = '@gofinances:user';
-
   async function signInWithGoogle() {
     try {
       const RESPONSE_TYPE = 'token';
@@ -58,10 +56,11 @@ function AuthProvider({ children }: AuthProviderProps) {
       const { type, params } = await AuthSession.startAsync({ authUrl }) as AuthorizationResponse;
 
       if (type === 'success') {
-        const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`);
+        const response = await fetch(
+          `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${params.access_token}`
+        );
 
         const credentials = await response.json();
-
         const userLogged = {
           id: credentials,
           email: credentials.email!,
@@ -69,11 +68,9 @@ function AuthProvider({ children }: AuthProviderProps) {
           photo: credentials.picture!
         }
 
-        console.log(userLogged);
-
         setUser(userLogged);
 
-        await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged));
+        await AsyncStorage.setItem(COLLECTION_USER, JSON.stringify(userLogged));
       }
 
     } catch (error: any) {
@@ -90,8 +87,6 @@ function AuthProvider({ children }: AuthProviderProps) {
         ]
       });
 
-      console.log(credentials);
-
 
       if (credentials) {
         const name = credentials.fullName!.givenName!;
@@ -105,7 +100,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
         setUser(userLogged);
 
-        await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged));
+        await AsyncStorage.setItem(COLLECTION_USER, JSON.stringify(userLogged));
       }
 
     } catch (error: any) {
@@ -117,12 +112,12 @@ function AuthProvider({ children }: AuthProviderProps) {
   async function signOut() {
     setUser({} as User);
 
-    await AsyncStorage.removeItem(userStorageKey);
+    await AsyncStorage.removeItem(COLLECTION_USER);
   }
 
   useEffect(() => {
     async function loadUserStorageData() {
-      const userStorage = await AsyncStorage.getItem(userStorageKey);
+      const userStorage = await AsyncStorage.getItem(COLLECTION_USER);
 
       if (userStorage) {
         const userLogged = JSON.parse(userStorage) as User;

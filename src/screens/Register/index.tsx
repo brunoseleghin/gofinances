@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../hooks/auth';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import {
   Keyboard,
   Modal,
   TouchableWithoutFeedback,
   Alert,
 } from 'react-native';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { COLLECTION_TRANSACTIONS } from '../../config/database'
 import uuid from 'react-native-uuid';
-import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
+import {
+  useNavigation,
+  NavigationProp,
+  ParamListBase
+} from '@react-navigation/native';
 
 import { InputForm } from '../../components/Form/InputForm';
 import { Button } from '../../components/Form/Button';
 import { TransactionTypeButton } from '../../components/Form/TransactionTypeButton';
 import { CategorySelectButton } from '../../components/Form/CategorySelectButton';
-
 import { CategorySelect } from '../CategorySelect'
 
 import {
@@ -49,6 +54,9 @@ export function Register() {
     key: 'category',
     name: 'Categoria'
   });
+
+  const { user } = useAuth();
+
   const { navigate }: NavigationProp<ParamListBase> = useNavigation();
 
   const {
@@ -90,12 +98,11 @@ export function Register() {
     }
 
     try {
-      const collectionKey = '@gofinances:transactions';
-      const collection = await AsyncStorage.getItem(collectionKey);
+      const collection = await AsyncStorage.getItem(`${COLLECTION_TRANSACTIONS}:${user.id}`);
       const currentCollection = collection ? JSON.parse(collection) : [];
       const collectionFormatted = [...currentCollection, newTransaction];
 
-      await AsyncStorage.setItem(collectionKey, JSON.stringify(collectionFormatted));
+      await AsyncStorage.setItem(`${COLLECTION_TRANSACTIONS}:${user.id}`, JSON.stringify(collectionFormatted));
 
       reset();
       setTransactionType('');
